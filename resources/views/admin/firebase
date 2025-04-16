@@ -1,0 +1,8 @@
+[program:echo-server]
+command=/usr/local/bin/laravel-echo-server  start --dir=/home/shafrah/
+dierctory=/home/shafrah/
+autostart=true
+user=shafrah
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/home/shafrah/storage/logs/echoserver.log

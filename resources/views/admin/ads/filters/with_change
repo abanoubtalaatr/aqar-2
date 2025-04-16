@@ -1,0 +1,136 @@
+{{-- resources/views/admin/ads/index.blade.php --}}
+@extends('admin.app')
+@section('title', isset($title) ? $title : '')
+
+@section('content')
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header border-transparent">
+                    <form class="mt-3" method="GET">
+                        <div class="row">
+                            @include('admin.ads.filters.index')
+                            {{-- Additional Filters --}}
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <select name="category_id" id="category_id" class="form-control">
+                                            <option value="">@lang('All Categories')</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}"
+                                                    {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div id="dynamic-filters" class="row">
+                                        
+                                        @if(request('category_id'))
+                                            @include('admin.ads.filters.' . strtolower($categories->firstWhere('id', request('category_id'))->name_en))
+                                        @endif
+                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">@lang('Search')</button>
+                                <a href="{{ $routeName ?? '#' }}" class="btn btn-secondary">@lang('Reset')</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0" id='tbl'>
+                            <thead>
+                                <tr>
+                                    <th>@lang('dashboard.id')</th>
+                                    <th>@lang('License Number')</th>
+                                    <th>@lang('Category')</th>
+                                    <th>@lang('User Info')</th>
+                                    <th>@lang('Price')</th>
+                                    <th>@lang('Area')</th>
+                                    <th>@lang('Status')</th>
+                                    <th>@lang('Published At')</th>
+                                    <th>@lang('Actions')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($items as $item)
+                                    <tr>
+                                        <td>{{ $item->id }}</td>
+                                        <td>{{ $item->license_number }}</td>
+                                        <td>{{ $item->category->name ?? '' }}</td>
+                                        <td>
+                                            {{ $item->user->name ?? '' }}<br>
+                                            {{ $item->user->phone ?? '' }}
+                                        </td>
+                                        <td>{{ number_format($item->price) }}</td>
+                                        <td>{{ $item->area }}</td>
+                                        <td>
+                                            <span
+                                                class="badge badge-{{ $item->status == 'active' ? 'success' : 'warning' }}">
+                                                {{ $item->status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $item->published_at }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.ads.show', ['ad' => $item->id]) }}"
+                                                class="btn btn-tool btn-sm btn-info" title="@lang('show')">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+
+                                            @if (has_permission('admin.ads.destroy'))
+                                                <button type="button" class="btn btn-sm btn-danger btnDelete"
+                                                    data-remote="{{ route('admin.ads.destroy', $item->id) }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="9" class="text-center">@lang('No ads found')</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer clearfix">
+                    {{ $items->appends(request()->query())->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    @include('admin.ajax.delete')
+    <script>
+        $(document).ready(function() {
+            $('#category_id').on('change', function() {
+                var categoryId = $(this).val();
+                if (categoryId) {
+                    $.ajax({
+                        url: "{{ route('admin.ads.getFilters') }}",
+                        type: "GET",
+                        data: { category_id: categoryId },
+                        success: function(response) {
+                            $('#dynamic-filters').html(response);
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                } else {
+                    $('#dynamic-filters').html('');
+                }
+            });
+        });
+    </script>
+@endsection
