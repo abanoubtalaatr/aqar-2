@@ -1414,4 +1414,5 @@ return [
     'view_fal' => ' عرض الرخصة',
     'latitude_center' => 'مركز خط العرض',
     'longitude_center' => 'مركز خط الطول',
+    'chat' => 'دردشه'
 ];

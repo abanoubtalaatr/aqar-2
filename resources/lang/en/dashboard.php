@@ -1308,4 +1308,5 @@ return [
     'developer_hint' => 'For developer use only',
     'latitude_center' => 'Latitude Center',
     'longitude_center' => 'Longitude Center',
+    'chat' => 'chat'
 ];

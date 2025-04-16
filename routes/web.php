@@ -42,6 +42,7 @@ use Chatify\Http\Controllers\MessagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Admin\ChatifyController;
 
 
 /*
@@ -347,7 +348,7 @@ Route::middleware('LanguageManager')->prefix('admin')->as('admin.')->group(funct
     Route::fallback(function () {
         return redirect()->intended();
     });
-    
+
 });
 
 Route::get('/admin/ads/get-filters', function (Request $request) {
@@ -363,4 +364,12 @@ Route::get('/admin/ads/get-filters', function (Request $request) {
 
 Route::get('/', function () {
     return redirect('/admin/admin/login');
+});
+
+
+Route::prefix('chatify')->group(function() {
+    // Override the default Chatify routes
+    Route::get('/getContacts', [ChatifyController::class, 'getContacts'])->name('chatify.contacts');
+    Route::get('/search', [ChatifyController::class, 'search'])->name('chatify.search');
+    // Include other Chatify routes as needed
 });

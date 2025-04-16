@@ -13,11 +13,11 @@
 
          @if (auth()->user()->can('admin-read') || auth()->user()->can('user-read') || auth()->user()->can('role-read'))
              <li
-                 class="nav-item has-treeview 
+                 class="nav-item has-treeview
                  {{ openTab('admin.admins.*') }} {{ openTab('admin.roles.*') }}
                         {{ openTab('admin.users.*') }} ">
                  <a href="#"
-                     class="nav-link {{ activeTab('admin.admins.*') }} {{ activeTab('admin.users.*') }} 
+                     class="nav-link {{ activeTab('admin.admins.*') }} {{ activeTab('admin.users.*') }}
                                 {{ activeTab('admin.roles.*') }}">
                      <i class="nav-icon fas fa-users"></i>
                      <p>
@@ -249,7 +249,7 @@
                  </ul>
              </li>
          @endcan
-         
+
          @if (auth()->user()->can('article-read'))
              <li class="nav-item has-treeview {{ openTab('admin.articles.*') }} {{ openTab('admin.cities-articles.*') }}">
                  <a href="#"
@@ -265,7 +265,7 @@
                     <li class="nav-item">
                         <a href="{{ route('admin.articles.index') }}" class="nav-link {{ activeTab('admin.articles.*') }}">
                             <i class="nav-icon fas fa-newspaper"></i>
-       
+
                             <p class="text">@lang('dashboard.articles')</p>
                         </a>
                     </li>
@@ -320,7 +320,7 @@
                  </a>
              </li>
          @endcan
-         
+
          @can('category-read')
              <li class="nav-item">
                  <a href="{{ route('admin.categories.index') }}" class="nav-link {{ activeTab('admin.categories.index') }}">
@@ -396,6 +396,15 @@
              </li>
          @endcan
 
+
+         <li class="nav-item">
+            <a href="{{ route('chatify') }}"
+                class="nav-link {{ activeTab('chatify') }}">
+                <i class="nav-icon fas fa-comments"></i>
+
+                <p class="text">@lang('dashboard.chat')</p>
+            </a>
+        </li>
          {{-- <li class="nav-item">
             <a href="{{ route('chatify') }}" class="nav-link">
                <i class="nav-icon fas fa-comments"></i>
